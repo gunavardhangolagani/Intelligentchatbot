@@ -10,9 +10,9 @@ Follow these steps to set up the project on your local machine:
    ```
    python3 -m venv venv
    ```
-3. **Activate the Virtual Environment:**
+3. **Activate the Virtual Environment:** **(Gitpod)**
    ```
-   . venv/bin/activate
+   source myenv/bin/activate
    ```
 4. **Install Requirements:**
    ```
