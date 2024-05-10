@@ -12,13 +12,17 @@ Follow these steps to set up the project on your local machine:
    ```
 3. **Activate the Virtual Environment:** **(Gitpod)**
    ```
-   source myenv/bin/activate
+   source myenv/bin/activate\
    ```
-4. **Install Requirements:**
+4. **Deactivate the Virtual Environment:** **(Gitpod)**
+   ```
+   deactivate
+   ```
+5. **Install Requirements:**
    ```
    pip install -r requirements.txt
    ```
-5. **Configure Environment Variables:**
+6. **Configure Environment Variables:**
    - Add your OpenAI API key to `env.sh`:
      ```
      export OPENAI_API_KEY="your_openai_api_key_here"
