@@ -12,7 +12,8 @@ Follow these steps to set up the project on your local machine:
    ```
 3. **Activate the Virtual Environment:** **(Gitpod)**
    ```
-   source myenv/bin/activate
+      source myenv/bin/activate
+
    ```
 4. **Deactivate the Virtual Environment:** **(Gitpod)**
    ```
