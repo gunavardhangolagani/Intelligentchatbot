@@ -12,8 +12,12 @@ Follow these steps to set up the project on your local machine:
    ```
 3. **Activate the Virtual Environment:** **(Gitpod)**
    ```
+<<<<<<< HEAD
       source myenv/bin/activate
 
+=======
+   source venv/bin/activate
+>>>>>>> refs/remotes/origin/main
    ```
 4. **Deactivate the Virtual Environment:** **(Gitpod)**
    ```
@@ -28,6 +32,17 @@ Follow these steps to set up the project on your local machine:
      ```
      export OPENAI_API_KEY="your_openai_api_key_here"
      ```
+7. **When you encounter similar type issues**
+   -  To https://github.com/gunavardhangolagani/Intelligentchatbot.git
+      ! [rejected]        main -> main (non-fast-forward)
+      error: failed to push some refs to 'https://github.com/gunavardhangolagani/Intelligentchatbot.git'
+      hint: Updates were rejected because the tip of your current branch is behind
+      hint: its remote counterpart. If you want to integrate the remote changes,
+      hint: use 'git pull' before pushing again.
+      hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+   - When you ran git merge, you effectively brought the changes from the remote main branch into your local main branch. This action synced your local branch with      the changes on the remote repository.
+   - git merge helped you incorporate the changes from the remote repository into your local branch, resolving the conflict between the local and remote versions of the branch, and allowing you to push your changes successfully.
+
 ## Usage
   Once the project is set up, you can proceed to run the demo code provided in `demo.ipynb` to see the chatbot in action.
 ## Further Work
