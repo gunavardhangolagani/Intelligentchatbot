@@ -1,7 +1,8 @@
 from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from text_data import get_doc_chunks
+from langchain_fireworks import FireworksEmbeddings
+from text_to_doc import get_doc_chunks
 from web_crawler import get_data_from_website
 from prompt import get_prompt
 from langchain.chains import ConversationalRetrievalChain
@@ -13,8 +14,10 @@ def get_chroma_client():
 
     Returns:
         langchain.vectorstores.chroma.Chroma: ChromaDB vector store instance.
-    """
+    gemini 
     embedding_function = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
+    """
+    embedding_function = FireworksEmbeddings(model="nomic-ai/nomic-embed-text-v1.5")
     return Chroma(
         collection_name="website_data",
         embedding_function=embedding_function,
@@ -45,8 +48,8 @@ def make_chain():
     Returns:
         langchain.chains.ConversationalRetrievalChain: ConversationalRetrievalChain instance.
     """
-    model = ChatGoogleGenerativeAI( model="gemini-pro",
-                                    temperature=0.3,
+    model = ChatFireworks( model_name="accounts/fireworks/models/mixtral-8x7b-instruct",
+                                    temperature=0.0,
                                     verbose=True)
     vector_store = get_chroma_client()
     prompt = get_prompt()

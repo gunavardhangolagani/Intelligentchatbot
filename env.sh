@@ -1,1 +1,1 @@
-export OPENAI_API_KEY=''
+export FIREWORKS_API_KEY="dqd5BQHUmdfBtV8lEXlxaGs7MXmdisBiMOrChQ76oAo5LXru"

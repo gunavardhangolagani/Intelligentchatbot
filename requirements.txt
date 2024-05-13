@@ -4,5 +4,6 @@ bs4==0.0.2
 html2text==2020.1.16
 chromadb==0.4.22
 streamlit
-google-generativeai
+langchain-google-genai
 python-dotenv
+langchain-fireworks
