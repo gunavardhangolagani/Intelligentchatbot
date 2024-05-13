@@ -6,3 +6,4 @@ chromadb==0.4.22
 streamlit
 langchain-google-genai
 python-dotenv
+langchain-fireworks
