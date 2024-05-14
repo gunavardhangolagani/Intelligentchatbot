@@ -1,1 +1,1 @@
-export FIREWORKS_API_KEY="dqd5BQHUmdfBtV8lEXlxaGs7MXmdisBiMOrChQ76oAo5LXru"
+export FIREWORKS_API_KEY=""
