@@ -39,7 +39,7 @@ def get_data_from_website(url):
     except:
         page_title = url.path[1:].replace("/", "-")
     meta_description = soup.find("meta", attrs={"name": "description"})
-    meta_keywords = soup.find("meta", attrs={"name": "keywords"})
+    meta_keywords = soup.find("meta.", attrs={"name": "keywords"})
     if meta_description:
         description = meta_description.get("content")
     else:
@@ -57,7 +57,7 @@ def get_data_from_website(url):
     return text, metadata
 
     # Example usage of the get_data_from_website function
-url = "https://www.coursera.org/"  # Replace this with the URL of the website you want to scrape
+url = "https://www.udemy.com/"  # Replace this with the URL of the website you want to scrape
 text_content, metadata = get_data_from_website(url)
 
 # Now you can use the text content and metadata as needed
