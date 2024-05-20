@@ -1,4 +1,7 @@
-from fastapi import FastAPI, HTTPException, Form
+from fastapi import APIRouter , Depends,FastAPI, HTTPException, Form,status
+from fastapi.security import OAuth2PasswordRequestForm
+from langchain_fireworks import Fireworks
+from prompt import get_prompt , system_prompt
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from langchain_fireworks import ChatFireworks
@@ -6,11 +9,17 @@ from fireworks.client.api import ChatCompletionStreamResponse, ChatCompletionRes
 import asyncio
 from dotenv import load_dotenv
 import os 
-
+from langchain.prompts import (
+    SystemMessagePromptTemplate,
+    PromptTemplate,
+    ChatPromptTemplate,
+    HumanMessagePromptTemplate
+)
 
 load_dotenv()
 
 app = FastAPI()
+
 
 # Allowing CORS for all origins, methods, and headers
 app.add_middleware(
