@@ -1,9 +1,11 @@
-langchain==0.1.6
-langchain-openai==0.0.5
+langchain
+langchain-community
 bs4==0.0.2
-html2text==2020.1.16
-chromadb==0.4.22
+html2text
+chromadb
 streamlit
-langchain-google-genai
 python-dotenv
 langchain-fireworks
+fastapi
+uvicorn
+requests
