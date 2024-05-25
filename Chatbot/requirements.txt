@@ -1,0 +1,11 @@
+langchain
+langchain-community
+bs4==0.0.2
+html2text
+chromadb
+streamlit
+python-dotenv
+langchain-fireworks
+fastapi
+uvicorn
+requests
