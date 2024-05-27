@@ -1,42 +1,35 @@
-from langchain_community.vectorstores import Chroma
-from langchain_fireworks import FireworksEmbeddings, ChatFireworks
-from langchain_core.messages import HumanMessage, SystemMessage
-from text_to_doc import get_doc_chunks
-from web_crawler import get_data_from_website
+from langchain.llms import fireworks
 from prompt import get_prompt
+from langchain_fireworks import ChatFireworks
+from langchain_core.messages import HumanMessage, SystemMessage
+from web_crawler import get_data_from_website
+from text_to_doc import get_doc_chunks
+from dotenv import load_dotenv
+import os 
+load_dotenv()
 
-def get_chroma_client():
-    embedding_function = FireworksEmbeddings(model="nomic-ai/nomic-embed-text-v1.5")
-    return Chroma(
-        collection_name="website_data",
-        embedding_function=embedding_function,
-        persist_directory="data/chroma"
-    )
+url = "https://www.udemy.com/"  
+text_content, metadata = get_data_from_website(url)
+doc_chunks = get_doc_chunks(text_content, metadata)
 
-def store_docs(url):
-    text, metadata = get_data_from_website(url)
-    docs = get_doc_chunks(text, metadata)
-    vector_store = get_chroma_client()
-    vector_store.add_documents(docs)
-    vector_store.persist()
+context = "\n".join([chunk.page_content for chunk in doc_chunks])
 
 def generate_response(system_prompt, user_question):
-    chat = ChatFireworks(model="accounts/fireworks/models/mixtral-8x7b-instruct")
+    api_key = os.getenv("FIREWORKS_API_KEY")
+    chat = llm = ChatFireworks(api_key=api_key, 
+                    model="accounts/fireworks/models/mixtral-8x7b-instruct",
+                    max_tokens=256)
+
     system_message = SystemMessage(content=system_prompt)
     human_message = HumanMessage(content=user_question)
     response = chat.invoke([system_message, human_message])
     generated_response = response.content
-    
     return generated_response
 
+# Define the function to get the response
 def get_response(question, organization_name, organization_info, contact_info):
-    vector_store = get_chroma_client()  
-    retriever = vector_store.as_retriever(search_type="mmr", verbose=True)
-    docs = retriever.invoke(question)
-    context = "\n\n".join([doc.page_content for doc in docs])
-    
     prompt = get_prompt()
-    formatted_prompt = prompt.format(
+    formatted_prompt = prompt.format_prompt(
         context=context,
         question=question,
         chat_history="",
@@ -44,5 +37,16 @@ def get_response(question, organization_name, organization_info, contact_info):
         organization_info=organization_info,
         contact_info=contact_info
     )
-    response = generate_response(formatted_prompt, question)  
+    formatted_prompt_str = str(formatted_prompt)  # Ensure it's a string
+    response = generate_response(formatted_prompt_str, question)
     return response
+
+# Example usage
+question = "What courses are available on Udemy?"
+chat_history = ""
+organization_name = "Udemy"
+organization_info = "Udemy is an online learning platform with a wide range of courses."
+contact_info = "You can contact Udemy support at support@udemy.com."
+
+response = get_response(question, organization_name, organization_info, contact_info)
+print(response)

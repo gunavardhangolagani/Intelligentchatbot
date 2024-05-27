@@ -1,69 +1,69 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+import os
+from dotenv import load_dotenv
 from web_crawler import get_data_from_website
 from text_to_doc import get_doc_chunks
 from prompt import get_prompt
-from langchain_community.vectorstores import Chroma
-from langchain_fireworks import FireworksEmbeddings
-from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_fireworks import ChatFireworks
+from langchain_core.messages import HumanMessage, SystemMessage
 
+# Load environment variables
+load_dotenv()
+
+# Initialize FastAPI app
 app = FastAPI()
 
-class QueryRequest(BaseModel):
+# Scrape and clean the data
+url = "https://www.udemy.com/"
+text_content, metadata = get_data_from_website(url)
+doc_chunks = get_doc_chunks(text_content, metadata)
+context = "\n".join([chunk.page_content for chunk in doc_chunks])
+
+class ChatRequest(BaseModel):
     question: str
     organization_name: str
     organization_info: str
     contact_info: str
 
-@app.on_event("startup")
-def startup_event():
-    global vector_store
-    vector_store = get_chroma_client()
+def generate_response(system_prompt, user_question):
+    api_key = os.getenv("FIREWORKS_API_KEY")
+    chat = ChatFireworks(api_key=api_key, 
+                         model="accounts/fireworks/models/mixtral-8x7b-instruct",
+                         max_tokens=256)
 
-def get_chroma_client():
-    embedding_function = FireworksEmbeddings(model="nomic-ai/nomic-embed-text-v1.5")
-    return Chroma(
-        collection_name="website_data",
-        embedding_function=embedding_function,
-        persist_directory="data/chroma"
+    system_message = SystemMessage(content=system_prompt)
+    human_message = HumanMessage(content=user_question)
+    response = chat.invoke([system_message, human_message])
+    generated_response = response.content
+    return generated_response
+
+def get_response(question, organization_name, organization_info, contact_info):
+    prompt = get_prompt()
+    formatted_prompt = prompt.format_prompt(
+        context=context,
+        question=question,
+        chat_history="",
+        organization_name=organization_name,
+        organization_info=organization_info,
+        contact_info=contact_info
     )
+    formatted_prompt_str = str(formatted_prompt)  # Ensure it's a string
+    response = generate_response(formatted_prompt_str, question)
+    return response
 
-@app.post("/store_docs/")
-def store_docs(url: str):
+@app.post("/chat")
+def chat_endpoint(request: ChatRequest):
     try:
-        text, metadata = get_data_from_website(url)
-        if text is None:
-            raise HTTPException(status_code=500, detail="Failed to retrieve data from the website.")
-        
-        docs = get_doc_chunks(text, metadata)
-        vector_store.add_documents(docs)
-        vector_store.persist()
-        return {"message": "Documents stored successfully."}
+        response = get_response(request.question, request.organization_name, request.organization_info, request.contact_info)
+        return {"response": response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/get_response/")
-def get_response(query: QueryRequest):
-    try:
-        prompt = get_prompt()
-        model = ChatFireworks(model_name="accounts/fireworks/models/mixtral-8x7b-instruct",
-                              temperature=0.0,
-                              verbose=True)
-
-        human_message = HumanMessage(content=query.question)
-        system_message = SystemMessage(content=prompt.format(
-            context="",
-            chat_history="",
-            organization_name=query.organization_name,
-            organization_info=query.organization_info,
-            contact_info=query.contact_info
-        ))
-        response = model([system_message, human_message])
-
-        return {"answer": response['content']}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+# Example endpoint to check the service status
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the chatbot API. Use /chat to interact with the bot."}
 
 if __name__ == "__main__":
     import uvicorn
