@@ -3,8 +3,8 @@
 The Intelligent Website Guide is an AI-powered chatbot designed to assist users in navigating a website efficiently. It leverages Retrieval-Augmented Generation (RAG) techniques to provide personalized assistance by understanding user queries and offering intuitive responses. This project integrates an AI chatbot into an EdTech website to enhance user experience, ensuring seamless guidance to various sections.
 
 ## Installation
-  For installation do checkout the Learn.md file in the repo above or just click the link below 
-  https://github.com/gunavardhangolagani/Intelligentchatbot/blob/main/Learn.md
+  For installation, check out the Learn.md file in the repo: [![Learn.md](https://img.shields.io/badge/Installation-Learn.md-blue)](https://github.com/gunavardhangolagani/Intelligentchatbot/blob/main/Learn.md)
+
 
 ##  Tech Stack
 Programming Language: Python 🐍
